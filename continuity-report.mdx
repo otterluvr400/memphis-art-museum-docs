@@ -1,0 +1,40 @@
+---
+title: "Continuity Report"
+description: "Global documentation health and cross-module inconsistencies."
+icon: "clipboard-check"
+generated_by: "Engine:Continuity"
+generation_date: "2026-07-27"
+---
+
+# Continuity Report
+
+<Warning>
+  This report was generated automatically. Items marked **unsure** need human review.
+</Warning>
+
+## Summary
+
+| Metric | Count |
+|--------|-------|
+| Modules reviewed | 1 |
+| Redundancies fixed | 0 |
+| Contradictions flagged | 0 |
+| Naming collisions found | 0 |
+| Confidence adjustments | 0 |
+
+## Open issues
+
+| Module | Section | Issue | Confidence |
+|--------|---------|-------|------------|
+| _None_ | — | — | — |
+
+## Recently resolved
+
+| Module | Issue | Resolution |
+|--------|-------|------------|
+| `custom_product_tags` | Model description for `product.tag.line` omitted `product_tmpl_id` from the uniqueness constraint, making it sound like only `category_id + tag_id` needed to be unique. | Updated the description to `product_tmpl_id + category_id + tag_id`, matching `models/product_tag_line.py` and the troubleshooting section. |
+
+## Notes
+
+- Full source-tree grep confirmed that `custom_product_tags` is referenced only by `mam_setup` (install-only reverse dependency) and by its own files.
+- No other custom module defines or references `product.custom.tag`, `product.custom.tag.category`, or `product.tag.line`.

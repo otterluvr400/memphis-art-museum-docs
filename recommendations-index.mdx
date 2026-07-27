@@ -1,0 +1,29 @@
+---
+title: "Recommendations Index"
+description: "Prioritized improvement opportunities across all custom modules."
+icon: "lightbulb"
+generated_by: "Engine:Advisor"
+generation_date: "2026-07-27"
+---
+
+# Recommendations Index
+
+<Warning>
+  These are machine-generated suggestions. Do not apply without human review.
+</Warning>
+
+## By impact
+
+| Priority | Module | Recommendation | Effort | Confidence |
+|----------|--------|------------------|--------|------------|
+| High | custom_product_tags | Add a Python constraint on `product.tag.line` ensuring `tag_id.category_id == category_id`. | Low | high |
+| High | custom_product_tags | Add a menu item for the `action_product_custom_tag_category` window action. | Low | high |
+| High | custom_product_tags | Evaluate replacing the custom tagging hierarchy with native Odoo 19 `product.tag` plus `product_template.product_tag_ids`. | High | medium |
+| Low | custom_product_tags | Replace Python `search_count` uniqueness checks with `_sql_constraints` UNIQUE indexes. | Low | medium |
+| Low | custom_product_tags | Improve display-name rendering in many2one dropdowns for `product.custom.tag`. | Low | medium |
+
+## By module
+
+| Module | Open recommendations | Highest priority |
+|--------|----------------------|------------------|
+| custom_product_tags | 5 | Add a Python constraint on `product.tag.line` ensuring `tag_id.category_id == category_id`. |
