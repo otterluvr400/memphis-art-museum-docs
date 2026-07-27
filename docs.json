@@ -1,56 +1,43 @@
 {
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
   "name": "Memphis Art Museum ERP",
   "description": "Developer documentation for Odoo 19 customizations.",
-  "logo": {
-    "light": "/logo/light.png",
-    "dark": "/logo/dark.png"
-  },
-  "favicon": "/favicon.svg",
   "colors": {
     "primary": "#0D9373",
     "light": "#55D799",
-    "dark": "#0A7D62",
-    "anchors": {
-      "from": "#0D9373",
-      "to": "#07C983"
-    }
+    "dark": "#0A7D62"
   },
-  "topbarLinks": [
-    {
-      "name": "ERP Repository",
-      "url": "https://github.com/otterluvr400/memphis-art-museum-erp"
-    }
-  ],
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
+  },
+  "favicon": "/favicon.svg",
+  "icons": {
+    "library": "lucide"
+  },
   "navigation": {
-    "tabs": [
+    "groups": [
       {
-        "tab": "Modules",
-        "groups": [
-          {
-            "group": "Custom Modules",
-            "pages": [
-              "modules/custom_product_tags"
-            ]
-          }
-        ]
+        "group": "Overview",
+        "pages": ["index"]
       },
       {
-        "tab": "Reports",
-        "groups": [
-          {
-            "group": "Agent Reports",
-            "pages": [
-              "continuity-report",
-              "recommendations-index"
-            ]
-          }
-        ]
+        "group": "Modules",
+        "pages": ["modules/custom_product_tags"]
+      },
+      {
+        "group": "Reports",
+        "pages": ["continuity-report", "recommendations-index"]
       }
     ]
   },
-  "footer": {
-    "socials": {
-      "github": "https://github.com/otterluvr400"
-    }
+  "navbar": {
+    "links": [
+      {
+        "type": "github",
+        "href": "https://github.com/otterluvr400/memphis-art-museum-erp"
+      }
+    ]
   }
 }
