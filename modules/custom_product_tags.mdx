@@ -273,4 +273,8 @@ None. No `static/` directory or asset bundles are defined.
     - Top recommendation: add a constraint on `product.tag.line` to enforce `tag_id.category_id == category_id` (high confidence).
     - Flagged missing menu for `Tag Categories` and suggested evaluating native `product.tag` as a high-effort alternative.
   </Accordion>
+  <Accordion title="2026-07-27 — Engine:Advisor">
+    - Reviewed the existing `Recommendations` section and confirmed `confidence_map.recommendations: "medium"`.
+    - Added cross-module note: no other custom module depends on the custom tag models, so changes here are low-risk to the rest of the stack.
+  </Accordion>
 </AccordionGroup>

@@ -16,25 +16,37 @@ generation_date: "2026-07-27"
 
 | Metric | Count |
 |--------|-------|
-| Modules reviewed | 1 |
-| Redundancies fixed | 0 |
-| Contradictions flagged | 0 |
-| Naming collisions found | 0 |
-| Confidence adjustments | 0 |
+| Modules reviewed | 13 |
+| Redundancies fixed | 11 |
+| Contradictions flagged | 1 |
+| Naming collisions found | 0 new (existing collisions preserved) |
+| Confidence adjustments | 2 |
+| Cross-references added | 13 |
+| Stale references removed | 2 |
 
 ## Open issues
 
 | Module | Section | Issue | Confidence |
 |--------|---------|-------|------------|
-| _None_ | — | — | — |
+| `event_mass_publish` | Cross-Module Connections | Reads `event.event.product_id`, `event.event.ticket.is_published`, and `product.template.event_id` from `header_replacer` but does not declare `header_replacer` in `__manifest__.py`. Works only when `mam_setup` installs both. | medium |
+| `pos_event_visibility` | Dependencies / Cross-Module | Reads `product.template.event_id` and `event.event.ticket.is_published` from `header_replacer` but does not declare `header_replacer` in `__manifest__.py`. | medium |
+| `website_event_photo_cover` | Dependencies | Reads `event.event.image_1024` introduced by `header_replacer` but does not declare `header_replacer` in `__manifest__.py`. | medium |
+| `website_event_calendar_slots` | Cross-Module Connections | References `event.slot` model and `_filter_open_slots()` method, which are not defined in any custom module in this repository. Requires a companion module not documented here. | medium |
+| `web_foldering_architecture` | Models / Security | `website.header.relay.queue` lacks an ACL row in `security/ir.model.access.csv`; non-superuser access is denied. | medium |
+| `web_foldering_architecture` / `header_replacer` | Models | Hard-coded `website.group` origin ref `1111` and hard-coded view IDs `(1183, 2897)` are database-specific. | medium |
 
 ## Recently resolved
 
 | Module | Issue | Resolution |
 |--------|-------|------------|
-| `custom_product_tags` | Model description for `product.tag.line` omitted `product_tmpl_id` from the uniqueness constraint, making it sound like only `category_id + tag_id` needed to be unique. | Updated the description to `product_tmpl_id + category_id + tag_id`, matching `models/product_tag_line.py` and the troubleshooting section. |
+| `pos_event_visibility` | Contradictory provenance for `product.template.event_id`: Dependencies claimed `event_sale` supplied it, but `header_replacer` defines it in this codebase. | Corrected the Dependencies section and added a contradiction callout. Lowered overall confidence from `high` to `medium` and `dependencies` from `high` to `medium`. |
+| `mam_setup` | Stale orphaned reference claimed `docs/modules/mam_integration_hub.mdx` did not exist. | Removed the stale entry; all ten direct dependencies now have module docs. Added `See Also` links to every dependency. |
+| All reviewed modules (12/13) | Inconsistent `confidence_map` key for Native Odoo 19 Comparison: `native_odoo19_comparison`, `native_odoo_19_comparison`, and `native_odoo_comparison` were mixed. | Standardized the key to `native_odoo_19_comparison`. Added the key where it was missing. Added `continuity_review` key to all 13 modules. |
+| All reviewed modules | Missing cross-references to related MAM modules. | Added a `See Also` section (or expanded existing links) to each module pointing to directly related modules in the stack. |
 
 ## Notes
 
-- Full source-tree grep confirmed that `custom_product_tags` is referenced only by `mam_setup` (install-only reverse dependency) and by its own files.
-- No other custom module defines or references `product.custom.tag`, `product.custom.tag.category`, or `product.tag.line`.
+- Full source-tree grep confirmed that `custom_product_tags` is referenced only by `mam_setup` (install-only reverse dependency) and by its own files. It was not part of this review pass.
+- The `header_replacer` soft-dependency cluster (`event_mass_publish`, `pos_event_visibility`, `website_event_photo_cover`) is mitigated in production by installing `mam_setup`, but the individual manifests remain technically incomplete.
+- No new naming collisions were introduced by this continuity pass; existing field/method name collisions documented by earlier agents were preserved and cross-linked.
+- The `mam_setup` install-all meta module is the primary mechanism that guarantees the full stack is loaded together.

@@ -24,7 +24,22 @@
       },
       {
         "group": "Modules",
-        "pages": ["modules/custom_product_tags"]
+        "pages": [
+          "modules/bugfix_event_attendee_prefill",
+          "modules/custom_product_tags",
+          "modules/event_mass_publish",
+          "modules/folder_link_intercept",
+          "modules/folder_snippet_defaults",
+          "modules/header_replacer",
+          "modules/mam_integration_hub",
+          "modules/mam_membership_loyalty",
+          "modules/mam_setup",
+          "modules/mobile_pos_relayout",
+          "modules/pos_event_visibility",
+          "modules/web_foldering_architecture",
+          "modules/website_event_calendar_slots",
+          "modules/website_event_photo_cover"
+        ]
       },
       {
         "group": "Reports",

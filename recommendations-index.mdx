@@ -2,7 +2,7 @@
 title: "Recommendations Index"
 description: "Prioritized improvement opportunities across all custom modules."
 icon: "lightbulb"
-generated_by: "Engine:Advisor"
+generated_by: "advisor-agent"
 generation_date: "2026-07-27"
 ---
 
@@ -14,16 +14,91 @@ generation_date: "2026-07-27"
 
 ## By impact
 
+### High priority / low effort
+
 | Priority | Module | Recommendation | Effort | Confidence |
-|----------|--------|------------------|--------|------------|
-| High | custom_product_tags | Add a Python constraint on `product.tag.line` ensuring `tag_id.category_id == category_id`. | Low | high |
-| High | custom_product_tags | Add a menu item for the `action_product_custom_tag_category` window action. | Low | high |
-| High | custom_product_tags | Evaluate replacing the custom tagging hierarchy with native Odoo 19 `product.tag` plus `product_template.product_tag_ids`. | High | medium |
-| Low | custom_product_tags | Replace Python `search_count` uniqueness checks with `_sql_constraints` UNIQUE indexes. | Low | medium |
-| Low | custom_product_tags | Improve display-name rendering in many2one dropdowns for `product.custom.tag`. | Low | medium |
+|----------|--------|----------------|--------|------------|
+| High | `custom_product_tags` | Add a Python constraint on `product.tag.line` enforcing `tag_id.category_id == category_id`. | Low | high |
+| High | `custom_product_tags` | Add a menu item for `action_product_custom_tag_category`. | Low | high |
+| High | `bugfix_event_attendee_prefill` | Add `data-copy-target` attributes to attendee inputs and use them instead of parsing `name` suffixes. | Low | high |
+| High | `bugfix_event_attendee_prefill` | Guard the "Apply to All" button so it is disabled until at least two ticket bodies exist. | Low | high |
+| High | `event_mass_publish` | Add `header_replacer` to the manifest `depends`. | Low | high |
+| High | `event_mass_publish` | Return an `ir.actions.act_window` from `action_queue_from_selection` for all selection sizes. | Low | high |
+| High | `event_mass_publish` | Validate `batch_size` is positive and cap it in the form view. | Low | high |
+| High | `folder_link_intercept` | Skip HTML response rewriting for non-public/backend paths earlier in `_dispatch`. | Low | high |
+| High | `folder_link_intercept` | Add a friendly folder-access denied page instead of raising raw `Forbidden()`. | Low | high |
+| High | `folder_link_intercept` | Make `ORIGIN_ONLY_PATHS` and `INTERNAL_CONTROL_PATHS` configurable via `ir.config_parameter`. | Low | medium |
+| High | `folder_snippet_defaults` | Read view architecture through the `arch` property instead of `arch_db`. | Low | high |
+| High | `folder_snippet_defaults` | Restrict snippet-default writes to website-designer rights. | Low | high |
+| High | `header_replacer` | Remove or activate the orphaned `views/menu.md` file. | Low | high |
+| High | `header_replacer` | Fix the duplicate XML ID `hide_product_id_event_ticket_list`. | Low | high |
+| High | `header_replacer` | Guard the `html_editor` import with a fallback. | Low | high |
+| High | `mam_integration_hub` | Externalize the hard-coded Square location ID `SQUARE_STORE_LOCATION`. | Low | high |
+| High | `mam_integration_hub` | Implement or remove the Supabase customer-import stub. | Low | high |
+| High | `mam_integration_hub` | Move the DeepSeek system prompt and categorization rules to configurable model fields. | Low | high |
+| High | `mam_membership_loyalty` | Use `loyalty.program` rewards for membership benefits instead of overwriting `specific_property_product_pricelist`. | Low | high |
+| High | `mam_membership_loyalty` | Add a `benefit_priority` field on `sale.subscription.plan`. | Low | high |
+| High | `mam_setup` | Add a CI check that validates the manifest dependency graph. | Low | high |
+| High | `mam_setup` | Consider setting `"application": True` so the stack appears as a top-level app. | Low | high |
+| High | `mobile_pos_relayout` | Add explicit access rights for the registration-desk group. | Low | high |
+| High | `mobile_pos_relayout` | Move the customer/ticket search into a server method with permission checks. | Low | high |
+| High | `pos_event_visibility` | Add `header_replacer` to the manifest `depends`. | Low | high |
+| High | `pos_event_visibility` | Unify the "passed" threshold between `event.event` and `product.template`. | Low | high |
+| High | `web_foldering_architecture` | Fix the duplicate `start_date` field on `folder.discount`. | Low | high |
+| High | `web_foldering_architecture` | Add an ACL row for `website.header.relay.queue`. | Low | high |
+| High | `web_foldering_architecture` | Guard the `html_editor` import with a fallback. | Low | high |
+| High | `website_event_calendar_slots` | Declare the module that provides `event.slot` as a manifest dependency. | Low | high |
+| High | `website_event_calendar_slots` | Validate the selected slot on form submission server-side. | Low | high |
+| High | `website_event_calendar_slots` | Replace `sudo()` in public JSON routes with proper ACLs/record rules. | Low | high |
+| High | `website_event_photo_cover` | Add `header_replacer` to the manifest `depends`. | Low | high |
+| High | `website_event_photo_cover` | Guard the override so it falls back to `super()` if `image_1024` is absent. | Low | high |
+
+### High priority / high effort
+
+| Priority | Module | Recommendation | Effort | Confidence |
+|----------|--------|----------------|--------|------------|
+| High | `custom_product_tags` | Evaluate replacing the custom tagging hierarchy with native Odoo 19 `product.tag` plus `product_template.product_tag_ids`. | High | medium |
+| High | `bugfix_event_attendee_prefill` | Move the "Apply to All" logic to a server-side wizard or RPC call. | High | medium |
+| High | `event_mass_publish` | Introduce a job-level advisory lock or `processing` state to prevent duplicate cron workers. | High | medium |
+| High | `folder_link_intercept` | Replace post-render link rewriting with a centralized URL-generation helper. | High | medium |
+| High | `folder_snippet_defaults` | Replace direct `arch_db` mutation with dedicated `website.page`/snippet data records per folder. | High | medium |
+| High | `header_replacer` | Merge the two `product.category` class declarations into a single file. | High | medium |
+| High | `header_replacer` | Replace hard-coded view IDs `(1183, 2897)` and origin group `ref="1111"` with XML IDs/configuration. | High | medium |
+| High | `mam_integration_hub` | Replace custom phase-machine crons with `queue_job` or idempotent locked jobs. | High | medium |
+| High | `mam_membership_loyalty` | Replace the daily cron with event-driven synchronization via subscription lifecycle hooks. | High | medium |
+| High | `mobile_pos_relayout` | Avoid the POS iframe and embed the POS UI as a proper OWL sub-component. | High | medium |
+| High | `pos_event_visibility` | Replace stored computed flags with a dynamic domain or cron-refreshed helper table. | High | medium |
+| High | `web_foldering_architecture` | Replace hard-coded view IDs and the origin group reference with XML-ID lookups. | High | medium |
+| High | `website_event_calendar_slots` | Avoid replacing the entire `website_event.modal_slot_registration` modal body; inherit smaller regions. | High | medium |
 
 ## By module
 
 | Module | Open recommendations | Highest priority |
 |--------|----------------------|------------------|
-| custom_product_tags | 5 | Add a Python constraint on `product.tag.line` ensuring `tag_id.category_id == category_id`. |
+| `custom_product_tags` | 6 | Add a Python constraint on `product.tag.line` enforcing `tag_id.category_id == category_id`. |
+| `bugfix_event_attendee_prefill` | 7 | Add `data-copy-target` attributes to attendee inputs and use them instead of parsing `name` suffixes. |
+| `event_mass_publish` | 8 | Add `header_replacer` to the manifest `depends`. |
+| `folder_link_intercept` | 8 | Skip HTML response rewriting for non-public/backend paths earlier in `_dispatch`. |
+| `folder_snippet_defaults` | 7 | Read view architecture through the `arch` property instead of `arch_db`. |
+| `header_replacer` | 9 | Remove or activate the orphaned `views/menu.md` file. |
+| `mam_integration_hub` | 10 | Externalize the hard-coded Square location ID `SQUARE_STORE_LOCATION`. |
+| `mam_membership_loyalty` | 7 | Use `loyalty.program` rewards instead of overwriting `specific_property_product_pricelist`. |
+| `mam_setup` | 5 | Add a CI check that validates the manifest dependency graph. |
+| `mobile_pos_relayout` | 7 | Add explicit access rights for the registration-desk group. |
+| `pos_event_visibility` | 7 | Add `header_replacer` to the manifest `depends`. |
+| `web_foldering_architecture` | 9 | Fix the duplicate `start_date` field on `folder.discount`. |
+| `website_event_calendar_slots` | 8 | Declare the module that provides `event.slot` as a manifest dependency. |
+| `website_event_photo_cover` | 5 | Add `header_replacer` to the manifest `depends`. |
+
+## Dependency-graph theme
+
+Several modules read fields introduced by `header_replacer` (`event.event.product_id`, `event.event.image_1024`, `product.template.event_id`, `event.event.ticket.is_published`) without declaring `header_replacer` in their manifests. The most efficient low-effort wins across the whole stack are:
+
+1. Add `header_replacer` to `event_mass_publish`, `pos_event_visibility`, and `website_event_photo_cover`.
+2. Fix the duplicate `start_date` field and missing ACL in `web_foldering_architecture`.
+3. Externalize hard-coded constants and prompts in `mam_integration_hub`.
+4. Replace brittle frontend field-name parsing in `bugfix_event_attendee_prefill` and `website_event_calendar_slots` with data attributes and server-side validation.
+
+---
+
+_Generated by **advisor-agent** on 2026-07-27._
