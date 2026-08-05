@@ -3,7 +3,7 @@ title: "Continuity Report"
 description: "Global documentation health and cross-module inconsistencies."
 icon: "clipboard-check"
 generated_by: "Engine:Continuity"
-generation_date: "2026-07-27"
+generation_date: "2026-08-05"
 ---
 
 # Continuity Report
@@ -16,13 +16,13 @@ generation_date: "2026-07-27"
 
 | Metric | Count |
 |--------|-------|
-| Modules reviewed | 13 |
-| Redundancies fixed | 11 |
-| Contradictions flagged | 1 |
-| Naming collisions found | 0 new (existing collisions preserved) |
+| Modules reviewed | 10 |
+| Redundancies fixed | 0 |
+| Contradictions flagged | 0 new |
+| Naming collisions found | 0 new |
 | Confidence adjustments | 2 |
-| Cross-references added | 13 |
-| Stale references removed | 2 |
+| Cross-references added | 12 |
+| Stale references removed | 1 |
 
 ## Open issues
 
@@ -32,6 +32,7 @@ generation_date: "2026-07-27"
 | `pos_event_visibility` | Dependencies / Cross-Module | Reads `product.template.event_id` and `event.event.ticket.is_published` from `header_replacer` but does not declare `header_replacer` in `__manifest__.py`. | medium |
 | `website_event_photo_cover` | Dependencies | Reads `event.event.image_1024` introduced by `header_replacer` but does not declare `header_replacer` in `__manifest__.py`. | medium |
 | `website_event_calendar_slots` | Cross-Module Connections | References `event.slot` model and `_filter_open_slots()` method, which are not defined in any custom module in this repository. Requires a companion module not documented here. | medium |
+| `pos_qol_overrides` | Cross-Module Connections | `receipt_screen.js` reads `event.registration.event_slot_id.start_datetime` from the same external `event.slot` provider. The model is not defined in any custom module in this repository. | medium |
 | `web_foldering_architecture` | Models / Security | `website.header.relay.queue` lacks an ACL row in `security/ir.model.access.csv`; non-superuser access is denied. | medium |
 | `web_foldering_architecture` / `header_replacer` | Models | Hard-coded `website.group` origin ref `1111` and hard-coded view IDs `(1183, 2897)` are database-specific. | medium |
 
@@ -39,14 +40,18 @@ generation_date: "2026-07-27"
 
 | Module | Issue | Resolution |
 |--------|-------|------------|
-| `pos_event_visibility` | Contradictory provenance for `product.template.event_id`: Dependencies claimed `event_sale` supplied it, but `header_replacer` defines it in this codebase. | Corrected the Dependencies section and added a contradiction callout. Lowered overall confidence from `high` to `medium` and `dependencies` from `high` to `medium`. |
-| `mam_setup` | Stale orphaned reference claimed `docs/modules/mam_integration_hub.mdx` did not exist. | Removed the stale entry; all ten direct dependencies now have module docs. Added `See Also` links to every dependency. |
-| All reviewed modules (12/13) | Inconsistent `confidence_map` key for Native Odoo 19 Comparison: `native_odoo19_comparison`, `native_odoo_19_comparison`, and `native_odoo_comparison` were mixed. | Standardized the key to `native_odoo_19_comparison`. Added the key where it was missing. Added `continuity_review` key to all 13 modules. |
-| All reviewed modules | Missing cross-references to related MAM modules. | Added a `See Also` section (or expanded existing links) to each module pointing to directly related modules in the stack. |
+| `header_replacer` / `pos_qol_overrides` | `EventRegistrationPopup` setup-patch conflict was documented only on the `pos_qol_overrides` page. | Added reciprocal POS bundle and `EventRegistrationPopup` conflict warning to `header_replacer`. Extended `See Also` on both pages. |
+| `mobile_pos_relayout` | Page lacked a `See Also` section despite being referenced by other POS modules. | Added `See Also` with cross-references to `header_replacer`, `pos_qol_overrides`, `pos_stripe_tap`, `pos_event_visibility`, and `mam_setup`. |
+| `pos_qol_overrides` | Missing `See Also` section and no `confidence_map.continuity_review` key. | Added `continuity_review: "medium"`, `See Also` section, and documented the `event_slot_id` soft dependency. |
+| `pos_stripe_tap` | Missing `See Also` section and no `confidence_map.continuity_review` key. | Added `continuity_review: "medium"` and `See Also` section with cross-references to `pos_qol_overrides`, `mobile_pos_relayout`, `header_replacer`, and `mam_setup`. |
+| `docs.json` | `pos_qol_overrides` and `pos_stripe_tap` were missing from the Modules navigation group even though their pages exist. | Added both entries alphabetically after `pos_event_visibility`. |
+| `website_event_calendar_slots` | No reciprocal link to the module that also reads `event_slot_id`. | Added `See Also` link to `pos_qol_overrides` and noted the shared `event.slot` dependency. |
+| `mam_membership_loyalty` | No reciprocal link to the module that displays its benefit pricelist. | Added `See Also` link to `pos_qol_overrides` and noted the member-pricelist discount display coupling. |
 
 ## Notes
 
 - Full source-tree grep confirmed that `custom_product_tags` is referenced only by `mam_setup` (install-only reverse dependency) and by its own files. It was not part of this review pass.
 - The `header_replacer` soft-dependency cluster (`event_mass_publish`, `pos_event_visibility`, `website_event_photo_cover`) is mitigated in production by installing `mam_setup`, but the individual manifests remain technically incomplete.
+- The two new POS modules (`pos_qol_overrides`, `pos_stripe_tap`) are **not** listed in `mam_setup`'s manifest dependencies. The `mam_setup` docs accurately reflect the manifest, so this is currently a system-design observation rather than a documentation contradiction. If the install-all meta module is intended to pull the entire stack, the manifest should be updated.
 - No new naming collisions were introduced by this continuity pass; existing field/method name collisions documented by earlier agents were preserved and cross-linked.
-- The `mam_setup` install-all meta module is the primary mechanism that guarantees the full stack is loaded together.
+- The `mam_setup` install-all meta module remains the primary mechanism that guarantees the full stack is loaded together, but it now excludes the two newest POS modules unless they are added.

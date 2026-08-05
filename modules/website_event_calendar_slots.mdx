@@ -6,8 +6,8 @@ icon: "package"
 # Provenance
 generated_by: "Engine:Scribe"
 generation_date: "2026-07-27"
-last_reviewed_date: null
-reviewed_by: null
+last_reviewed_date: "2026-08-05"
+reviewed_by: "Engine:Continuity"
 
 # Overall confidence
 confidence: "medium"
@@ -284,6 +284,10 @@ The interaction uses `@web/core/network/rpc` for JSON calls and `@web/core/l10n/
   customizes the event detail/cover rendering experience.
 - [`pos_event_visibility`](/modules/pos_event_visibility) — controls which
   event-linked products appear in the POS catalog.
+- [`pos_qol_overrides`](/modules/pos_qol_overrides) — its receipt screen reads
+  `event.registration.event_slot_id.start_datetime` for the auto-mark-present
+  ±12-hour window. The `event.slot` model that this page depends on is therefore
+  also a soft dependency of the POS receipt screen.
 - [`mam_setup`](/modules/mam_setup) — install-all meta module that pulls this module
   into the full MAM stack.
 
@@ -347,8 +351,11 @@ The interaction uses `@web/core/network/rpc` for JSON calls and `@web/core/l10n/
       `bugfix_event_attendee_prefill`, `website_event_photo_cover`,
       `pos_event_visibility`, and `mam_setup`.
   </Accordion>
-  <Accordion title="2026-07-27 — Engine:Advisor">
-    - Added the `Recommendations` section and set `confidence_map.recommendations: "medium"`.
-    - Reviewed source files for concrete issues and prioritized high-impact/low-effort fixes.
+  <Accordion title="2026-08-05 — Engine:Continuity">
+    - Added reciprocal `See Also` link to `pos_qol_overrides`, which reads
+      `event.registration.event_slot_id.start_datetime` from the same external
+      `event.slot` provider this module depends on.
+    - Updated `last_reviewed_date` and `reviewed_by` to reflect this continuity pass.
+    - Kept `confidence_map.continuity_review` at **medium** (static analysis only).
   </Accordion>
 </AccordionGroup>

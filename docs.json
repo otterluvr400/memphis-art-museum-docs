@@ -36,6 +36,8 @@
           "modules/mam_setup",
           "modules/mobile_pos_relayout",
           "modules/pos_event_visibility",
+          "modules/pos_qol_overrides",
+          "modules/pos_stripe_tap",
           "modules/web_foldering_architecture",
           "modules/website_event_calendar_slots",
           "modules/website_event_photo_cover"

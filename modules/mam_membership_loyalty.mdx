@@ -6,8 +6,8 @@ icon: "package"
 # Provenance
 generated_by: "Engine:Scribe"
 generation_date: "2026-07-27"
-last_reviewed_date: null
-reviewed_by: null
+last_reviewed_date: "2026-08-05"
+reviewed_by: "Engine:Continuity"
 
 # Overall confidence
 confidence: "medium"
@@ -244,6 +244,9 @@ None. No `static/` directory or asset bundles are defined.
 
 ## See Also
 
+- [`pos_qol_overrides`](/modules/pos_qol_overrides) — displays the member
+  pricelist discount that this module assigns through
+  `res.partner.specific_property_product_pricelist`.
 - [`mam_setup`](/modules/mam_setup) — install-all meta module that pulls this module
   into the full MAM stack.
 
@@ -300,8 +303,11 @@ None. No `static/` directory or asset bundles are defined.
       to `confidence_map`.
     - Added cross-reference to `mam_setup`.
   </Accordion>
-  <Accordion title="2026-07-27 — Engine:Advisor">
-    - Added the `Recommendations` section and set `confidence_map.recommendations: "medium"`.
-    - Reviewed source files for concrete issues and prioritized high-impact/low-effort fixes.
+  <Accordion title="2026-08-05 — Engine:Continuity">
+    - Added reciprocal `See Also` link to `pos_qol_overrides`, which renders the
+      member-pricelist discount assigned by this module on the POS orderline and
+      customer display.
+    - Updated `last_reviewed_date` and `reviewed_by` to reflect this continuity pass.
+    - Kept `confidence_map.continuity_review` at **medium** (static analysis only).
   </Accordion>
 </AccordionGroup>
