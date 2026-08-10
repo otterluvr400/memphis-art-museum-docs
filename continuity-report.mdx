@@ -3,7 +3,7 @@ title: "Continuity Report"
 description: "Global documentation health and cross-module inconsistencies."
 icon: "clipboard-check"
 generated_by: "Engine:Continuity"
-generation_date: "2026-08-05"
+generation_date: "2026-08-10"
 ---
 
 # Continuity Report
@@ -16,13 +16,13 @@ generation_date: "2026-08-05"
 
 | Metric | Count |
 |--------|-------|
-| Modules reviewed | 10 |
+| Modules reviewed | 12 |
 | Redundancies fixed | 0 |
 | Contradictions flagged | 0 new |
 | Naming collisions found | 0 new |
-| Confidence adjustments | 2 |
-| Cross-references added | 12 |
-| Stale references removed | 1 |
+| Confidence adjustments | 0 |
+| Cross-references added | 2 |
+| Stale references removed | 0 |
 
 ## Open issues
 
@@ -35,11 +35,14 @@ generation_date: "2026-08-05"
 | `pos_qol_overrides` | Cross-Module Connections | `receipt_screen.js` reads `event.registration.event_slot_id.start_datetime` from the same external `event.slot` provider. The model is not defined in any custom module in this repository. | medium |
 | `web_foldering_architecture` | Models / Security | `website.header.relay.queue` lacks an ACL row in `security/ir.model.access.csv`; non-superuser access is denied. | medium |
 | `web_foldering_architecture` / `header_replacer` | Models | Hard-coded `website.group` origin ref `1111` and hard-coded view IDs `(1183, 2897)` are database-specific. | medium |
+| `pos_qol_overrides` | Dependencies | `pos_stripe_tap` is now a direct manifest dependency (resolved 2026-08-10), but `mailchimp_x_odoo_txsms` remains a soft dependency for SMS rerouting. | medium |
 
 ## Recently resolved
 
 | Module | Issue | Resolution |
 |--------|-------|------------|
+| `pos_qol_overrides` / `pos_stripe_tap` | `pos_stripe_tap` was a soft dependency; now direct in manifest. | Updated `pos_qol_overrides` docs to reflect direct dependency. Added `pos_stripe_tap` to manifest `depends`. |
+| `pos_qol_overrides` / `mailchimp_x_odoo_txsms` | SMS rerouting via Mandrill was undocumented. | Added `mailchimp_x_odoo_txsms` as soft dependency and cross-reference in `pos_qol_overrides` docs. |
 | `header_replacer` / `pos_qol_overrides` | `EventRegistrationPopup` setup-patch conflict was documented only on the `pos_qol_overrides` page. | Added reciprocal POS bundle and `EventRegistrationPopup` conflict warning to `header_replacer`. Extended `See Also` on both pages. |
 | `mobile_pos_relayout` | Page lacked a `See Also` section despite being referenced by other POS modules. | Added `See Also` with cross-references to `header_replacer`, `pos_qol_overrides`, `pos_stripe_tap`, `pos_event_visibility`, and `mam_setup`. |
 | `pos_qol_overrides` | Missing `See Also` section and no `confidence_map.continuity_review` key. | Added `continuity_review: "medium"`, `See Also` section, and documented the `event_slot_id` soft dependency. |

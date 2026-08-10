@@ -3,7 +3,7 @@ title: "Recommendations Index"
 description: "Prioritized improvement opportunities across all custom modules."
 icon: "lightbulb"
 generated_by: "Engine:Advisor"
-generation_date: "2026-08-05"
+generation_date: "2026-08-10"
 ---
 
 # Recommendations Index
@@ -57,10 +57,13 @@ generation_date: "2026-08-05"
 | High | `website_event_calendar_slots` | Replace `sudo()` in public JSON routes with proper ACLs/record rules. | Low | high |
 | High | `website_event_photo_cover` | Add `header_replacer` to the manifest `depends`. | Low | high |
 | High | `website_event_photo_cover` | Guard the override so it falls back to `super()` if `image_1024` is absent. | Low | high |
+| High | `pos_qol_overrides` | Add `mailchimp_x_odoo_txsms` to the manifest `depends` or document the soft dependency. | Low | medium |
 | High | `pos_qol_overrides` | Fix `EventLookupPopup.toggleAll()` to pass the `pos.order` ID instead of `event.registration` IDs to `action_mark_registrations_present()`. | Low | high |
 | High | `pos_qol_overrides` | Add `pos_qol_overrides` to the `mam_setup` install-all manifest `depends`. | Low | high |
 | High | `pos_qol_overrides` | Extract the duplicated member-pricelist discount calculation from `orderline.js` and `customer_display_adapter.js` into a shared utility. | Low | high |
 | High | `pos_qol_overrides` | Move the hard-coded `@memphisartmuseum.org` blocked domain into an `ir.config_parameter` or model field. | Low | medium |
+| High | `mailchimp_x_odoo_txsms` | Add a company-level toggle to enable/disable Mandrill routing. | Low | high |
+| High | `mailchimp_x_odoo_txsms` | Document the `mandrill.api_key` and `mandrill.from_number` parameters in a setup README or data XML. | Low | high |
 
 ### High priority / high effort
 
@@ -87,6 +90,8 @@ generation_date: "2026-08-05"
 | High | `website_event_calendar_slots` | Avoid replacing the entire `website_event.modal_slot_registration` modal body; inherit smaller regions. | High | medium |
 | High | `pos_qol_overrides` | Introduce explicit access rights and record rules for `pos.anonymous.override`. | High | medium |
 | High | `pos_qol_overrides` | Replace the custom `pos.ticket.email.batch` cron batcher with a native Odoo 19 mail-queue or queue-job approach. | High | medium |
+| High | `pos_qol_overrides` | Consider using Odoo's `portal.mixin` framework for the public receipt page instead of a custom controller. | High | low |
+| High | `mailchimp_x_odoo_txsms` | Support multi-company Mandrill configurations (different API keys per company). | High | medium |
 
 ### Low priority / low effort
 
@@ -97,6 +102,8 @@ generation_date: "2026-08-05"
 | Low | `header_replacer` | Wire up or remove the `skip_menu_mirror` context flag. | Low | low |
 | Low | `mobile_pos_relayout` | Filter the `pos.config` lookup by `active=True` and user access. | Low | medium |
 | Low | `mobile_pos_relayout` | Clear the `CustomerSearchPanel` debounce timeout on component unmount. | Low | high |
+| Low | `mailchimp_x_odoo_txsms` | Add logging for successful sends at `info` level. | Low | low |
+| Low | `mailchimp_x_odoo_txsms` | Validate the `mandrill.from_number` format on startup or in a config check method. | Low | low |
 
 ## By module
 
@@ -114,6 +121,7 @@ generation_date: "2026-08-05"
 | `mam_setup` | 5 | Add a CI check that validates the manifest dependency graph. |
 | `mobile_pos_relayout` | 8 | Add explicit access rights for the registration-desk group. |
 | `pos_qol_overrides` | 8 | Fix `EventLookupPopup.toggleAll()` to pass the `pos.order` ID instead of `event.registration` IDs to `action_mark_registrations_present()`. |
+| `mailchimp_x_odoo_txsms` | 4 | Add a company-level toggle to enable/disable Mandrill routing. |
 | `pos_event_visibility` | 7 | Add `header_replacer` to the manifest `depends`. |
 | `web_foldering_architecture` | 9 | Fix the duplicate `start_date` field on `folder.discount`. |
 | `website_event_calendar_slots` | 8 | Declare the module that provides `event.slot` as a manifest dependency. |
