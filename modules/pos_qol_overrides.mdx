@@ -5,7 +5,7 @@ icon: "package"
 
 # Provenance
 generated_by: "Engine:Scribe"
-generation_date: "2026-08-10"
+generation_date: "2026-08-30"
 last_reviewed_date: "2026-08-09"
 reviewed_by: "Engine:Continuity"
 
@@ -45,7 +45,7 @@ confidence_map:
     `ir.model.access.csv` grants user access to anonymous overrides and system access to ticket batches.
   </Card>
   <Card title="POS Frontend" icon="monitor">
-    Patches `PosStore`, `ProductScreen`, `PaymentScreen`, `ReceiptScreen`, `PartnerList`, `Orderline`, `Navbar`, `ActionpadWidget`, and several event popups. Adds `EventLookupPopup`, `EventAttendeeListPopup`, and ticketbooth barcode scanner result.
+    Patches `PosStore`, `ProductScreen`, `PaymentScreen`, `ReceiptScreen`, `PartnerList`, `Orderline`, `Navbar`, `ActionpadWidget`, and several event popups. Adds `EventLookupPopup`, `EventAttendeeListPopup`, ticketbooth barcode scanner result, and login screen card reader re-pair.
   </Card>
   <Card title="Customer Display" icon="users">
     Extends `CustomerDisplay` and `CustomerDisplayPosAdapter` to show member-pricelist discounts.
@@ -219,11 +219,13 @@ confidence_map:
     - `pos_qol_overrides.EventRegistrationPopup` extends `pos_event.EventRegistrationPopup`.
     - `pos_qol_overrides.ReceiptScreen` and `pos_qol_overrides.ReceiptScreenPresence` extend `point_of_sale.ReceiptScreen`.
     - `pos_qol_overrides.CustomerDisplay` extends `point_of_sale.CustomerDisplay`.
+    - `pos_qol_overrides.LoginScreen` extends `point_of_sale.LoginScreen`.
   </Tab>
   <Tab title="New OWL templates">
     - `pos_qol_overrides.EventLookupPopup` — guest check-in lookup dialog.
     - `pos_qol_overrides.EventAttendeeListPopup` — event door list with search and grouped mark-as-present.
     - `pos_qol_overrides.TicketboothScanResult` — post-scan confirmation popup for ticketbooth mode.
+    - `pos_qol_overrides.LoginScreen` — adds "Re-pair Card Reader" button for MAM POS kiosk app.
   </Tab>
   <Tab title="Public receipt templates">
     - `views/pos_receipt_templates.xml` — `pos_receipt_page` (public receipt view) and `pos_receipt_not_found` (error page).
@@ -489,6 +491,14 @@ No record rules, implied groups, or dedicated groups are added by this module. T
 
 **Why it matters:** Customers can view and share their receipt without logging into a portal.
 
+### `LoginScreen` (new)
+
+**Native Odoo 19:** Standard login screen with cashier selection.
+
+**This module:** Adds a "Re-pair Card Reader" button that calls `window.AndroidPos.repairReader()` when available (MAM POS kiosk app only).
+
+**Why it matters:** Allows kiosk staff to re-pair Stripe card readers without restarting the POS session.
+
 ## See Also
 
 - [`header_replacer`](/modules/header_replacer) — shares the
@@ -554,6 +564,11 @@ No record rules, implied groups, or dedicated groups are added by this module. T
 # Agent Review Log
 
 <AccordionGroup>
+  <Accordion title="2026-08-30 — Engine:Scribe">
+    - Updated `pos_qol_overrides` after diff review of changes since 2026-08-10.
+    - Added `login_screen_repair.js` / `login_screen_repair.xml` documentation for card reader re-pair button.
+    - Updated `generation_date` to 2026-08-30.
+  </Accordion>
   <Accordion title="2026-08-10 — Engine:Scribe">
     - Updated `pos_qol_overrides` after diff review of changes since 2026-08-09.
     - Added `pos_stripe_tap` to direct manifest dependencies (new in manifest).

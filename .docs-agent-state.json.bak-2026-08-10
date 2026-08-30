@@ -1,0 +1,103 @@
+{
+  "lastRun": "2026-08-05",
+  "mode": "diff",
+  "changedModules": ["header_replacer", "mobile_pos_relayout", "pos_qol_overrides", "pos_stripe_tap"],
+  "modules": {
+    "bugfix_event_attendee_prefill": {
+      "scribe": "2026-07-27T10:25:00Z",
+      "cartographer": "2026-07-27T10:42:00Z",
+      "continuityEditor": "2026-07-27T11:30:00Z",
+      "advisor": "2026-07-27T11:53:00Z"
+    },
+    "custom_product_tags": {
+      "scribe": "2026-07-27T10:00:00Z",
+      "cartographer": "2026-07-27T10:05:00Z",
+      "continuityEditor": "2026-07-27T10:10:00Z",
+      "advisor": "2026-07-27T11:53:00Z"
+    },
+    "event_mass_publish": {
+      "scribe": "2026-07-27T10:24:00Z",
+      "cartographer": "2026-07-27T10:45:00Z",
+      "continuityEditor": "2026-07-27T11:30:00Z",
+      "advisor": "2026-07-27T11:53:00Z"
+    },
+    "folder_link_intercept": {
+      "scribe": "2026-07-27T10:24:00Z",
+      "cartographer": "2026-07-27T10:45:00Z",
+      "continuityEditor": "2026-07-27T11:30:00Z",
+      "advisor": "2026-07-27T11:53:00Z"
+    },
+    "folder_snippet_defaults": {
+      "scribe": "2026-07-27T10:24:00Z",
+      "cartographer": "2026-07-27T10:45:00Z",
+      "continuityEditor": "2026-07-27T11:30:00Z",
+      "advisor": "2026-07-27T11:53:00Z"
+    },
+    "header_replacer": {
+      "scribe": "2026-08-02T07:02:00Z",
+      "cartographer": "2026-08-05T15:30:00Z",
+      "continuityEditor": "2026-08-05T15:45:00Z",
+      "advisor": "2026-08-05T15:55:00Z"
+    },
+    "mam_integration_hub": {
+      "scribe": "2026-07-27T10:58:00Z",
+      "cartographer": "2026-07-27T11:00:00Z",
+      "continuityEditor": "2026-07-27T11:30:00Z",
+      "advisor": "2026-07-27T11:53:00Z"
+    },
+    "mam_membership_loyalty": {
+      "scribe": "2026-07-27T10:27:00Z",
+      "cartographer": "2026-07-27T10:47:00Z",
+      "continuityEditor": "2026-07-27T11:30:00Z",
+      "advisor": "2026-07-27T11:53:00Z"
+    },
+    "mam_setup": {
+      "scribe": "2026-07-27T10:26:00Z",
+      "cartographer": "2026-07-27T10:46:00Z",
+      "continuityEditor": "2026-07-27T11:30:00Z",
+      "advisor": "2026-07-27T11:53:00Z"
+    },
+    "mobile_pos_relayout": {
+      "scribe": "2026-08-02T07:02:00Z",
+      "cartographer": "2026-08-05T15:25:00Z",
+      "continuityEditor": "2026-08-05T15:45:00Z",
+      "advisor": "2026-08-05T15:50:00Z"
+    },
+    "pos_event_visibility": {
+      "scribe": "2026-07-27T10:37:00Z",
+      "cartographer": "2026-07-27T11:06:00Z",
+      "continuityEditor": "2026-07-27T11:30:00Z",
+      "advisor": "2026-07-27T11:53:00Z"
+    },
+    "pos_qol_overrides": {
+      "scribe": "2026-08-02T07:02:00Z",
+      "cartographer": "2026-08-05T15:35:00Z",
+      "continuityEditor": "2026-08-05T15:45:00Z",
+      "advisor": "2026-08-05T15:52:00Z"
+    },
+    "pos_stripe_tap": {
+      "scribe": "2026-08-02T07:02:00Z",
+      "cartographer": "2026-08-05T15:40:00Z",
+      "continuityEditor": "2026-08-05T15:45:00Z",
+      "advisor": "2026-08-05T15:51:00Z"
+    },
+    "web_foldering_architecture": {
+      "scribe": "2026-07-27T10:40:00Z",
+      "cartographer": "2026-07-27T11:05:00Z",
+      "continuityEditor": "2026-07-27T11:30:00Z",
+      "advisor": "2026-07-27T11:53:00Z"
+    },
+    "website_event_calendar_slots": {
+      "scribe": "2026-07-27T10:33:00Z",
+      "cartographer": "2026-07-27T11:04:00Z",
+      "continuityEditor": "2026-07-27T11:30:00Z",
+      "advisor": "2026-07-27T11:53:00Z"
+    },
+    "website_event_photo_cover": {
+      "scribe": "2026-07-27T10:40:00Z",
+      "cartographer": "2026-07-27T11:07:00Z",
+      "continuityEditor": "2026-07-27T11:30:00Z",
+      "advisor": "2026-07-27T11:53:00Z"
+    }
+  }
+}

@@ -3,7 +3,7 @@ title: "Continuity Report"
 description: "Global documentation health and cross-module inconsistencies."
 icon: "clipboard-check"
 generated_by: "Engine:Continuity"
-generation_date: "2026-08-10"
+generation_date: "2026-08-30"
 ---
 
 # Continuity Report
@@ -16,12 +16,12 @@ generation_date: "2026-08-10"
 
 | Metric | Count |
 |--------|-------|
-| Modules reviewed | 12 |
+| Modules reviewed | 15 |
 | Redundancies fixed | 0 |
 | Contradictions flagged | 0 new |
 | Naming collisions found | 0 new |
 | Confidence adjustments | 0 |
-| Cross-references added | 2 |
+| Cross-references added | 4 |
 | Stale references removed | 0 |
 
 ## Open issues
@@ -35,7 +35,9 @@ generation_date: "2026-08-10"
 | `pos_qol_overrides` | Cross-Module Connections | `receipt_screen.js` reads `event.registration.event_slot_id.start_datetime` from the same external `event.slot` provider. The model is not defined in any custom module in this repository. | medium |
 | `web_foldering_architecture` | Models / Security | `website.header.relay.queue` lacks an ACL row in `security/ir.model.access.csv`; non-superuser access is denied. | medium |
 | `web_foldering_architecture` / `header_replacer` | Models | Hard-coded `website.group` origin ref `1111` and hard-coded view IDs `(1183, 2897)` are database-specific. | medium |
-| `pos_qol_overrides` | Dependencies | `pos_stripe_tap` is now a direct manifest dependency (resolved 2026-08-10), but `mailchimp_x_odoo_txsms` remains a soft dependency for SMS rerouting. | medium |
+| `event_microsite` | Dependencies | `event_product` is not in manifest `depends` but `product.template` overrides are tightly coupled to it. | medium |
+| `website_manipulator` | Security | Craft CMS credentials stored in plain text; `password="True"` only masks UI. | high |
+| `header_replacer` | Security | ACL updated to include `base.group_public` read access (2026-08-30 diff). | high |
 
 ## Recently resolved
 
