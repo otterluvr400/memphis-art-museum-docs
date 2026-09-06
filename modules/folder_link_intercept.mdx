@@ -5,7 +5,7 @@ icon: "package"
 
 # Provenance
 generated_by: "Engine:Scribe"
-generation_date: "2026-07-27"
+generation_date: "2026-09-06"
 last_reviewed_date: null
 reviewed_by: null
 
@@ -169,7 +169,7 @@ None. No `views/` directory or XML view files are present.
     Before and after the normal Odoo dispatch, `_apply_session_folder_code_to_existing_cart` checks whether the request is on a relevant commerce path. If a valid folder access code exists, it calls `_apply_folder_promo_to_cart` to apply the loyalty/promotion code to the current sale order.
   </Step>
   <Step title="HTML link rewriting">
-    After dispatch returns a successful HTML response, the module parses the response body with `lxml.html`, iterates every `<a>` tag, and rewrites local URLs to include the active folder slug while preserving query strings and anchors. Origin-only and system paths are excluded from prefixing.
+    After dispatch returns a successful HTML response, the module first calls `_get_active_session_folder()` to verify the session folder and its access code are still valid. Only then does it parse the response body with `lxml.html`, iterate every `<a>` tag, and rewrite local URLs to include the active folder slug while preserving query strings and anchors. Origin-only and system paths are excluded from prefixing.
   </Step>
 </Steps>
 
@@ -178,6 +178,7 @@ None. No `views/` directory or XML view files are present.
 | Function | Purpose |
 |----------|---------|
 | `_folder_slug_for_rewrite` | Resolves the folder slug to use for rewriting: `request.folder_slug`, then session `folder_last_slug`, then legacy session `folder_slug`, then a folder inferred from access cookies. |
+| `_get_active_session_folder` | Returns the active `website.folder` record from session only if its access code is still valid. Used by the HTML link-rewrite step to ensure only validated folders trigger rewriting. |
 | `_is_origin_only` | Returns `True` for paths that should render at origin (e.g., `/shop/cart`, `/my`, `/contactus`, `/web`, `/payment`). |
 | `_is_system_path` | Returns `True` for backend, static, asset, and control paths that must never be folder-prefixed. |
 | `_is_internal_control_path` | Returns `True` for backend/editor routes such as `/odoo`, `/@`, `/html_editor`, `/web_editor`, `/bus`, `/mail`, `/websocket`. |
@@ -315,6 +316,10 @@ None. No `static/` directory, JavaScript modules, SCSS, or asset bundles are pre
 ## Agent Review Log
 
 <AccordionGroup>
+  <Accordion title="2026-09-06 — Engine:Scribe">
+    - Updated Business Logic and helper-function table to reflect the new `_get_active_session_folder()` call in the HTML link-rewrite step.
+    - The rewrite now validates the folder and its access code before parsing the response body, replacing the prior `_folder_slug_for_rewrite()` + bare slug check.
+  </Accordion>
   <Accordion title="2026-07-27 — Engine:Scribe">
     - Initial documentation generated from module source files.
     - No prior doc existed; full page written from scratch.

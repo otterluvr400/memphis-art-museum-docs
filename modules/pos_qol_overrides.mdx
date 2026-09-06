@@ -5,7 +5,7 @@ icon: "package"
 
 # Provenance
 generated_by: "Engine:Scribe"
-generation_date: "2026-08-30"
+generation_date: "2026-09-06"
 last_reviewed_date: "2026-08-09"
 reviewed_by: "Engine:Continuity"
 
@@ -71,6 +71,8 @@ confidence_map:
     - `point_of_sale` — required for all POS screens, models, and services.
     - `pos_event` — required for event registration popups, event tickets, and `event.registration` integration.
     - `pos_stripe_tap` — required for `stripe_tap_ensure_portal_access()` used in membership portal SMS flow.
+    - `pos_hr` — required for navbar Lock button styling (desktop and mobile menu items injected by `pos_hr`).
+    - `pos_enterprise` — required to remove the dark-mode toggle item injected by `pos_enterprise` in the navbar dropdown.
   </Accordion>
   <Accordion title="Soft / implied dependencies">
     - `event` — used for `event.registration`, `event.event.ticket`, `event.question`, and the `event.action_report_event_registration_full_page_ticket` report.
@@ -211,7 +213,7 @@ confidence_map:
     The following `t-inherit` templates are registered in the manifest under `point_of_sale._assets_pos` or `point_of_sale.customer_display_assets`:
     - `pos_qol_overrides.ActionpadWidget` extends `point_of_sale.ActionpadWidget`.
     - `pos_qol_overrides.ProductScreen` extends `point_of_sale.ProductScreen`.
-    - `pos_qol_overrides.Navbar` extends `point_of_sale.Navbar`.
+    - `pos_qol_overrides.Navbar` extends `point_of_sale.Navbar` (removes Install App, Cash In/Out, Create Product, Barcode Scanner, Local Network Access, Dark/Light Mode; styles Lock button red+bold).
     - `pos_qol_overrides.EventConfiguratorPopup` extends `pos_event.EventConfiguratorPopup`.
     - `pos_qol_overrides.EventConfiguratorPopupFooter` extends `pos_event.EventConfiguratorPopup`.
     - `pos_qol_overrides.PartnerList` and `pos_qol_overrides.PartnerLine` extend `point_of_sale.PartnerList` and `point_of_sale.PartnerLine`.
@@ -271,6 +273,12 @@ confidence_map:
     - `event_attendee_list_popup.js` uses `lookup_attendees_by_event` for a per-event door list.
     - `receipt_screen.js` adds a `Mark as Present` / `Here` button and auto-marks present when the event/slot start is within ±12 hours of now.
     - `barcode_reader_ticketbooth.js` intercepts scans when `pos.config.x_ticketbooth_mode` is enabled and calls `action_pos_ticketbooth_scan`.
+  </Step>
+  <Step title="Navbar dropdown cleanup and Lock styling">
+    `navbar.xml` patches the `Navbar` dropdown to remove several items that are not relevant to the MAM POS kiosk workflow:
+    - Remove Install App, Cash In/Out, Create Product, Barcode Scanner (mobile), Local Network Access, and Switch to Dark/Light Mode entries.
+    - Style the Lock button (desktop) and Lock menu item (mobile) with `text-danger fw-bold` (red + bold) for high visibility.
+    - The Lock item is injected by `pos_hr`; the dark-mode item is injected by `pos_enterprise`. Both modules are now direct manifest dependencies.
   </Step>
   <Step title="Customer display">
     `customer_display_adapter.js` and `customer_display.xml` mirror the member-pricelist discount line from the orderline patch.
@@ -564,6 +572,11 @@ No record rules, implied groups, or dedicated groups are added by this module. T
 # Agent Review Log
 
 <AccordionGroup>
+  <Accordion title="2026-09-06 — Engine:Scribe">
+    - Updated Dependencies to include new direct manifest dependencies `pos_hr` and `pos_enterprise`.
+    - Updated Business Logic to document navbar dropdown cleanup (removing Install App, Cash In/Out, Create Product, Barcode Scanner, Local Network Access, Dark/Light Mode) and Lock button styling (red + bold).
+    - Updated Views tab to describe the Navbar template changes.
+  </Accordion>
   <Accordion title="2026-08-30 — Engine:Scribe">
     - Updated `pos_qol_overrides` after diff review of changes since 2026-08-10.
     - Added `login_screen_repair.js` / `login_screen_repair.xml` documentation for card reader re-pair button.

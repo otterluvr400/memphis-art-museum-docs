@@ -35,6 +35,7 @@
           "modules/header_replacer",
           "modules/mailchimp_x_odoo_txsms",
           "modules/mam_integration_hub",
+          "modules/mam_membership_cards",
           "modules/mam_membership_loyalty",
           "modules/mam_setup",
           "modules/mobile_pos_relayout",

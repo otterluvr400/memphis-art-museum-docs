@@ -3,7 +3,7 @@ title: "Continuity Report"
 description: "Global documentation health and cross-module inconsistencies."
 icon: "clipboard-check"
 generated_by: "Engine:Continuity"
-generation_date: "2026-08-30"
+generation_date: "2026-09-06"
 ---
 
 # Continuity Report
@@ -16,18 +16,19 @@ generation_date: "2026-08-30"
 
 | Metric | Count |
 |--------|-------|
-| Modules reviewed | 15 |
+| Modules reviewed | 16 |
 | Redundancies fixed | 0 |
 | Contradictions flagged | 0 new |
 | Naming collisions found | 0 new |
 | Confidence adjustments | 0 |
-| Cross-references added | 4 |
+| Cross-references added | 5 |
 | Stale references removed | 0 |
 
 ## Open issues
 
 | Module | Section | Issue | Confidence |
 |--------|---------|-------|------------|
+| `mam_membership_cards` | Business Logic | `_push_to_google_wallet` is a placeholder; Google Wallet integration not yet implemented. | medium |
 | `event_mass_publish` | Cross-Module Connections | Reads `event.event.product_id`, `event.event.ticket.is_published`, and `product.template.event_id` from `header_replacer` but does not declare `header_replacer` in `__manifest__.py`. Works only when `mam_setup` installs both. | medium |
 | `pos_event_visibility` | Dependencies / Cross-Module | Reads `product.template.event_id` and `event.event.ticket.is_published` from `header_replacer` but does not declare `header_replacer` in `__manifest__.py`. | medium |
 | `website_event_photo_cover` | Dependencies | Reads `event.event.image_1024` introduced by `header_replacer` but does not declare `header_replacer` in `__manifest__.py`. | medium |

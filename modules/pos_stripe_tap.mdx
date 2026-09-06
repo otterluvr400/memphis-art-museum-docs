@@ -5,7 +5,7 @@ icon: "package"
 
 # Provenance
 generated_by: "Engine:Scribe"
-generation_date: "2026-08-09"
+generation_date: "2026-09-06"
 last_reviewed_date: "2026-08-05"
 reviewed_by: "Engine:Continuity"
 
@@ -53,7 +53,7 @@ confidence_map:
     No new groups, access rights, or record rules. Inherits POS security model and relies on `auth="user"` on the controller route.
   </Card>
   <Card title="Controllers" icon="globe">
-    One JSON controller: `/pos_stripe_tap/connection_token` creates a Stripe Terminal `ConnectionToken`.
+    Two JSON controllers: `/pos_stripe_tap/connection_token` creates a Stripe Terminal `ConnectionToken`, and `/pos_stripe_tap/keepalive_setup_intent` creates a zero-amount SetupIntent for reader keepalive.
   </Card>
   <Card title="Reports" icon="file-text">
     None.
@@ -187,6 +187,12 @@ Creates a portal `res.users` for the partner if one does not already exist, gene
 
 Automatically enables `recurring_invoice` when a product's category (or changed category) is membership category ID `8`. This couples product catalog data to the module's expected membership category.
 
+#### `sale.order.action_confirm()` / `_enqueue_blackbaud_website_memberships()`
+
+**File:** `models/sale_order.py`
+
+Overrides `action_confirm()` to enqueue Blackbaud membership sync jobs for website sale orders (orders with `website_id` set) that contain membership products. Mirrors the POS hook in `pos_qol_overrides` with operation `"sale"`. Never raises; failures are logged.
+
 #### `sale.order._do_payment(payment_token, invoice, auto_commit=False)`
 
 **File:** `models/sale_order.py`
@@ -227,7 +233,7 @@ No other XML views, actions, or menu records are defined.
     For membership sales, the flow opens `ContactInfoPopup` (email/phone) and `SignaturePopup` to capture customer contact data and a recurring-billing authorization signature.
   </Step>
   <Step title="Plan selection">
-    `MembershipPlanPopup` displays the available `product.pricelist.item` plans for each membership product, including prorated first-charge amount, and lets the cashier select which plans to subscribe to.
+    `MembershipPlanPopup` displays the available `product.pricelist.item` plans for each membership product, including prorated first-charge amount, and lets the cashier select which plans to subscribe to. Radio inputs use `tabindex="-1"` and `pointerdown.prevent` to prevent iOS click-through and double-trigger issues.
   </Step>
   <Step title="Build payment parameters">
     For a Stripe Tap order, it reads:
@@ -304,6 +310,24 @@ No other XML views, actions, or menu records are defined.
   </Step>
 </Steps>
 
+### Keepalive SetupIntent endpoint
+
+<Steps>
+  <Step title="Client requests a keepalive SetupIntent">
+    The Android app POSTs to `/pos_stripe_tap/keepalive_setup_intent` to generate a zero-amount reader activity intent.
+  </Step>
+  <Step title="Controller reads Stripe key">
+    `StripeTapController.keepalive_setup_intent` fetches `stripe.secret_key` from `ir.config_parameter` via `sudo`.
+  </Step>
+  <Step title="SetupIntent created">
+    It calls `stripe.SetupIntent.create(payment_method_types=["card_present"], usage="off_session")` and returns `{ "client_secret": si.client_secret }`.
+  </Step>
+</Steps>
+
+<Warning>
+  The keepalive endpoint creates a SetupIntent with no customer and no amount. Even if a card lands in the app's 1-second collect window, nothing can be charged. The saved-payment-method half of the object is never used.
+</Warning>
+
 <Warning>
   The controller uses `sudo()` to read the system parameter. Any authenticated Odoo user who can reach the route can trigger a Stripe connection-token creation. Confidence: **medium**.
 </Warning>
@@ -317,6 +341,7 @@ No reports, QWeb templates, or paperformats are defined.
 | Route | Type | Auth | Method | Returns | File |
 |-------|------|------|--------|---------|------|
 | `/pos_stripe_tap/connection_token` | `json` | `user` | `POST`-style JSON | `{ "secret": <stripe_token_secret> }` | `controllers/main.py` |
+| `/pos_stripe_tap/keepalive_setup_intent` | `json` | `user` | `POST`-style JSON | `{ "client_secret": <setup_intent_client_secret> }` | `controllers/main.py` |
 
 ### Payload & response
 
@@ -453,6 +478,12 @@ The route accepts no required parameters. It returns a JSON object with the Stri
 ## Agent Review Log
 
 <AccordionGroup>
+  <Accordion title="2026-09-06 — Engine:Scribe">
+    - Added documentation for the new `/pos_stripe_tap/keepalive_setup_intent` controller endpoint.
+    - Added documentation for the new `sale.order.action_confirm()` / `_enqueue_blackbaud_website_memberships()` hook that mirrors the POS Blackbaud sync for website sales.
+    - Updated `MembershipPlanPopup` description to note `tabindex="-1"` and `pointerdown.prevent` iOS fixes.
+    - Updated generation_date to 2026-09-06.
+  </Accordion>
   <Accordion title="2026-08-02 — Engine:Scribe">
     - Initial documentation generated from module source.
     - Documented one inherited model (`pos.payment.method`) and one controller route (`/pos_stripe_tap/connection_token`).

@@ -5,7 +5,7 @@ icon: "package"
 
 # Provenance
 generated_by: "Engine:Scribe"
-generation_date: "2026-07-27"
+generation_date: "2026-09-06"
 last_reviewed_date: "2026-08-05"
 reviewed_by: "Engine:Continuity"
 
@@ -89,7 +89,8 @@ confidence_map:
 
 | Model | Extended by | Source module | Source file | Notes |
 |-------|-------------|---------------|-------------|-------|
-| _None found_ | — | — | — | No other custom module inherits `res.partner`, `sale.order`, or `sale.subscription.plan` in a way that references this module's `benefit_pricelist_id` or `_sync_benefit_pricelist()` additions. |
+| `sale.order` | `sale.order` | `mam_membership_cards` | `models/sale_order.py` | `mam_membership_cards` depends on `mam_membership_loyalty` and adds a second override of `_compute_subscription_state` and `write` to sync membership cards. Because of dependency order, `mam_membership_loyalty`'s hooks run first. |
+| `res.partner` | `res.partner` | `mam_membership_cards` | `models/res_partner.py` | `mam_membership_cards` adds `_sync_membership_card()` to `res.partner`. |
 
 ### Shared mixins / abstract models
 
@@ -107,7 +108,8 @@ confidence_map:
 
 | Caller module | Caller method | Calls | Target module | Notes |
 |---------------|---------------|-------|---------------|-------|
-| _None found_ | — | — | — | No Python method calls between this module and other custom modules. |
+| `mam_membership_cards` | `SaleOrder._compute_subscription_state()` | `super()._compute_subscription_state()` → `mam_membership_loyalty.SaleOrder._compute_subscription_state()` | `mam_membership_loyalty` | Chained `sale.order` inheritance; `mam_membership_loyalty` syncs benefit pricelists before `mam_membership_cards` syncs membership cards. |
+| `mam_membership_cards` | `SaleOrder.write()` | `super().write()` → `mam_membership_loyalty.SaleOrder.write()` | `mam_membership_loyalty` | Chained write; `mam_membership_loyalty` triggers `_sync_benefit_pricelist()` before `mam_membership_cards` triggers `_sync_membership_card()`. |
 
 ### Orphaned / unresolved references
 
@@ -124,7 +126,7 @@ confidence_map:
 | Model | Type | Source file | Key fields / computed fields / constraints / methods |
 |-------|------|-------------|------------------------------------------------------|
 | `res.partner` | Inherited | `models/res_partner.py` | Adds `_get_benefit_pricelists()`, `_sync_benefit_pricelist()`, and `_cron_sync_benefit_pricelists()`. No new fields. |
-| `sale.order` | Inherited | `models/sale_order.py` | Overrides `_compute_subscription_state()` and `write()` to trigger partner pricelist synchronization when subscription state changes. No new fields. |
+| `sale.order` | Inherited | `models/sale_order.py` | Overrides `_compute_subscription_state()` and `write()` to trigger partner pricelist synchronization when subscription state changes. Adds `subscription_state` selection value `8_dropped`. No new fields otherwise. |
 | `sale.subscription.plan` | Inherited | `models/sale_subscription_plan.py` | Adds `benefit_pricelist_id` (Many2one → `product.pricelist`) to hold the pricelist granted to active subscribers. |
 
 <Warning>
@@ -155,7 +157,7 @@ confidence_map:
     A user opens `sale.subscription.plan` and selects a `product.pricelist` in the `Benefits Pricelist` field on the form. The view is `sale_subscription_plan_form_inherit_benefit` (`views/sale_subscription_plan_views.xml`).
   </Step>
   <Step title="Create or change a subscription sale order">
-    A `sale.order` with `is_subscription = True` and a `plan_id` that has a `benefit_pricelist_id` moves into or out of an active state (`3_progress`, `4_paused`, or `5_renewed`).
+    A `sale.order` with `is_subscription = True` and a `plan_id` that has a `benefit_pricelist_id` moves into or out of an active state (`3_progress`, `4_paused`, or `5_renewed`). The module also adds a custom `subscription_state` value `8_dropped` ("Dropped") to the selection field.
   </Step>
   <Step title="Sync the partner's pricelist">
     The overridden `sale.order._compute_subscription_state()` and `sale.order.write()` detect the state change and call `partner._sync_benefit_pricelist()` for the affected partners.
@@ -244,6 +246,9 @@ None. No `static/` directory or asset bundles are defined.
 
 ## See Also
 
+- [`mam_membership_cards`](/modules/mam_membership_cards) — extends this module's
+  `sale.order` and `res.partner` hooks to sync wallet membership cards tied to
+  subscription state.
 - [`pos_qol_overrides`](/modules/pos_qol_overrides) — displays the member
   pricelist discount that this module assigns through
   `res.partner.specific_property_product_pricelist`.
@@ -302,6 +307,13 @@ None. No `static/` directory or asset bundles are defined.
     - Added `native_odoo_19_comparison` and `continuity_review: "medium"` keys
       to `confidence_map`.
     - Added cross-reference to `mam_setup`.
+  </Accordion>
+  <Accordion title="2026-09-06 — Engine:Continuity">
+    - Updated Models table and Business Logic to document the new `subscription_state` selection value `8_dropped` added in the diff.
+    - Updated Cross-Module Connections: `mam_membership_cards` now extends `sale.order` and `res.partner` from this module.
+    - Added inter-module method calls table entries for the chained inheritance with `mam_membership_cards`.
+    - Added `See Also` cross-reference to `mam_membership_cards`.
+    - Verified no contradictions between the two modules' subscription-state sync logic.
   </Accordion>
   <Accordion title="2026-08-05 — Engine:Continuity">
     - Added reciprocal `See Also` link to `pos_qol_overrides`, which renders the
