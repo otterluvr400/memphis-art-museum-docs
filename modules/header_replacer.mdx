@@ -5,7 +5,7 @@ icon: "package"
 
 # Provenance
 generated_by: "Engine:Scribe"
-generation_date: "2026-08-30"
+generation_date: "2026-09-20"
 last_reviewed_date: "2026-08-05"
 reviewed_by: "Engine:Continuity"
 
@@ -263,6 +263,8 @@ confidence_map:
   </Step>
   <Step title="Render-time shell swap">
     When a shell is resolved, `patched_render()` temporarily sets `request.website` and `request.env.context` `website_id` to the shell, then calls `ir.ui.view._render_template()` on the original template. The original website is restored in a `finally` block.
+
+    As of 2026-09-20, the swap now also assigns `request.website = shell_ctx` directly before building the render environment, and includes additional debug logging (`RENDER IDENTITY2`) to trace which website identity is active during template rendering.
   </Step>
   <Step title="Theme/editor routing to shell">
     `WebsiteDesignViews` intercepts `/website/theme_customize_data_get`, `/website/theme_customize_data`, and `/website/save_xml`, swapping `request.website`/`request.env` to the shell derived from the HTTP referer before calling `super()`.
@@ -523,6 +525,22 @@ The JS patch looks up `event.question` records by ID in `this.pos.models` and pr
 ## Agent Review Log
 
 <AccordionGroup>
+  <Accordion title="2026-09-20 — Engine:Scribe">
+    - Updated `generation_date` to 2026-09-20 after diff review.
+    - Documented `request.website = shell_ctx` assignment and `RENDER IDENTITY2` debug logging in `patched_render()`.
+  </Accordion>
+  <Accordion title="2026-09-20 — Engine:Advisor">
+    - Reviewed diff-based changes. No new recommendations introduced.
+    - Existing recommendations remain valid.
+  </Accordion>
+  <Accordion title="2026-09-20 — Engine:Continuity">
+    - Reviewed diff-based changes for consistency. No contradictions introduced.
+    - Verified existing cross-references remain valid.
+  </Accordion>
+  <Accordion title="2026-09-20 — Engine:Cartographer">
+    - Re-verified Cross-Module Connections after diff review. No new cross-module connections introduced by the 2026-09-20 controller change.
+    - The `patched_render()` change is internal to `header_replacer` and does not affect module boundaries.
+  </Accordion>
   <Accordion title="2026-08-30 — Engine:Scribe">
     - Updated `header_replacer` after diff review of changes since 2026-08-05.
     - Updated ACL documentation: added `base.group_public` read access and confirmed `base.group_user` read access.

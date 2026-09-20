@@ -5,7 +5,7 @@ icon: "package"
 
 # Provenance
 generated_by: "Engine:Scribe"
-generation_date: "2026-08-09"
+generation_date: "2026-09-20"
 last_reviewed_date: "2026-08-05"
 reviewed_by: "Engine:Continuity"
 
@@ -58,7 +58,7 @@ Mobile POS Relayout (`mobile_pos_relayout`) changes the mobile Point of Sale UI 
     None.
   </Card>
   <Card title="Assets" icon="code">
-    Patches `Navbar` and `ProductScreen` (new: special pricelist indicator on customer button), overrides `ProductScreen`, `ActionpadWidget`, and `Navbar` templates. Adds CSS for mobile dialogs. Adds two new backend OWL components: `PosScannerWrapper` and `CustomerSearchPanel`.
+    Patches `Navbar` and `ProductScreen` (new: special pricelist indicator on customer button), overrides `ProductScreen`, `ActionpadWidget`, and `Navbar` templates. Adds CSS for mobile dialogs. Adds two new backend OWL components: `PosScannerWrapper` and `CustomerSearchPanel`. Also includes event-booth free-admission checkout patches (`EVENT_BOOTH_free_checkout.js`, `EVENT_BOOTH_free_receipt_status.js`, `EVENT_BOOTH_free_payment_flash.scss`, `EVENT_BOOTH_free_receipt_status.scss`) and license-scanning components (`pos_license_scan.js`, `aamva_license_scan.js`).
   </Card>
 </CardGroup>
 
@@ -127,6 +127,24 @@ Mobile POS Relayout (`mobile_pos_relayout`) changes the mobile Point of Sale UI 
 | `point_of_sale._assets_pos` | `header_replacer`, `pos_qol_overrides`, `pos_stripe_tap` | All modules patch or extend different POS components; no direct runtime interaction. `pos_qol_overrides` also inherits `point_of_sale.Navbar`, `ProductScreen`, and `ActionpadWidget`, so load order and patch compatibility should be verified. |
 | `web.assets_backend` | Multiple custom modules | Scanner wrapper and customer search components are added here; no direct interaction with other custom backend assets observed. |
 
+### New files added since 2026-09-06
+
+| File | Bundle | Purpose |
+|------|--------|---------|
+| `EVENT_BOOTH_free_checkout.js` | `point_of_sale._assets_pos` | Patches `OrderPaymentValidation` for free-admission checkout: hides payment screen during transition, manages background sync overlay. |
+| `EVENT_BOOTH_free_receipt_status.js` | `point_of_sale._assets_pos` | Tracks free-background checkout UUIDs and active sync count; exports `beginFreeBackgroundSync` / `endFreeBackgroundSync`. |
+| `EVENT_BOOTH_free_receipt_status.scss` | `point_of_sale._assets_pos` | Hides pending-sync navbar overlay during free-background checkout receipts and while any free background sync is in flight. |
+| `EVENT_BOOTH_free_payment_flash.scss` | `point_of_sale._assets_pos` | Hides `.payment-screen` during `mam-free-pay-transition` so the ~150 ms payment finalize is invisible. |
+| `pos_license_scan.js` | `point_of_sale._assets_pos` | AAMVA driver's license barcode parsing and integration with POS product screen. |
+| `aamva_license_scan.js` | `web.assets_backend` | Backend license scan utilities. |
+| `EVENT_BOOTH_batch.js` | `point_of_sale._assets_pos` | Event booth batch scanning mode. |
+| `EVENT_BOOTH_followup_badge.scss/xml` | `point_of_sale._assets_pos` | Follow-up badge UI for event booth. |
+| `EVENT_BOOTH_membership_screen.js/scss/xml` | `point_of_sale._assets_pos` | Membership enrollment screen for event booth. |
+| `EVENT_BOOTH_scan_screen.js/scss/xml` | `point_of_sale._assets_pos` | Full-screen scanner for event booth. |
+| `receipt_screen_no_print.scss` | `point_of_sale._assets_pos` | Receipt screen print button suppression. |
+| `scan_shortcut.js/xml` | `point_of_sale._assets_pos` | Scanner shortcut integration. |
+| `DEPRECATED_pos_lic_original.js` | not in manifest | Deprecated original license file; not loaded. |
+
 ### Orphaned / unresolved references
 
 | Reference | Expected target | Why it is flagged |
@@ -184,6 +202,20 @@ No new or extended models are declared.
   </Step>
   <Step title="Review button replaced and pricelist shown">
     On `ProductScreen`, the inherited template replaces the native review button with a `Customer` button. The JS patch adds `specialPricelist`, which displays the order partner's non-default pricelist (e.g. Members) beneath the customer name on the button.
+  </Step>
+</Steps>
+
+### Free-admission checkout (event booth)
+
+<Steps>
+  <Step title="Payment screen hidden during transition">
+    `pos_license_scan.js` adds `mam-free-pay-transition` to `document.body` **before** calling `payCash()`. The class hides `.payment-screen` via `EVENT_BOOTH_free_payment_flash.scss`. A 4-second safety timer clears the class if the flow is intercepted (e.g. membership guard). After `payCash()` resolves, `requestAnimationFrame` double-clears the class on the next frame so the receipt is never affected.
+  </Step>
+  <Step title="Background sync overlay management">
+    `EVENT_BOOTH_free_checkout.js` patches `OrderPaymentValidation` to call `beginFreeBackgroundSync()` before `mamPersistAndSyncFreeOrder()` and `endFreeBackgroundSync()` in `.finally()`. While any sync is in flight, `mam-free-sync-in-flight` is set on `document.body`, which hides the pending-sync navbar overlay so rapid-fire door scanning is never covered.
+  </Step>
+  <Step title="Receipt status tracking">
+    `EVENT_BOOTH_free_receipt_status.js` tracks free-background checkout UUIDs in a `Set` and patches `ReceiptScreen` to expose `mamFreeBackgroundCheckout`. The SCSS hides the pending-sync spinner only for free-background receipts and during active background syncs.
   </Step>
 </Steps>
 
@@ -375,9 +407,31 @@ This route is provided by the `point_of_sale` module and renders the full POS UI
 ## Agent Review Log
 
 <AccordionGroup>
+  <Accordion title="2026-09-20 — Engine:Scribe">
+    - Updated `generation_date` to 2026-09-20 after diff review.
+    - Documented new event-booth free-admission checkout patches: `EVENT_BOOTH_free_checkout.js`, `EVENT_BOOTH_free_receipt_status.js`, `EVENT_BOOTH_free_payment_flash.scss`, `EVENT_BOOTH_free_receipt_status.scss`.
+    - Documented `mam-free-pay-transition` and `mam-free-sync-in-flight` CSS class lifecycle.
+    - Documented new files: `pos_license_scan.js`, `aamva_license_scan.js`, `EVENT_BOOTH_batch.js`, `EVENT_BOOTH_followup_badge.*`, `EVENT_BOOTH_membership_screen.*`, `EVENT_BOOTH_scan_screen.*`, `receipt_screen_no_print.scss`, `scan_shortcut.*`.
+    - Noted `DEPRECATED_pos_lic_original.js` is present but not in manifest.
+  </Accordion>
   <Accordion title="2026-08-09 — Engine:Scribe">
     - Regenerated page after reviewing the current module source.
     - Documented the new `ProductScreen.specialPricelist` patch and the updated customer button template that displays the non-default pricelist.
+  </Accordion>
+  <Accordion title="2026-09-20 — Engine:Advisor">
+    - Reviewed diff-based changes. No new recommendations introduced.
+    - Existing recommendations remain valid.
+    - Noted the rapid growth of event-booth files; monitor for consolidation opportunities.
+  </Accordion>
+  <Accordion title="2026-09-20 — Engine:Continuity">
+    - Reviewed diff-based changes for consistency. No contradictions introduced.
+    - Verified existing cross-references remain valid.
+    - Noted the large number of new event-booth files; recommended future consolidation if the booth flow stabilizes.
+  </Accordion>
+  <Accordion title="2026-09-20 — Engine:Cartographer">
+    - Re-verified Cross-Module Connections after diff review. No new cross-module connections introduced by the 2026-09-20 changes.
+    - The new event-booth files are internal to `mobile_pos_relayout` and do not affect module boundaries.
+    - Noted `DEPRECATED_pos_lic_original.js` is present but not loaded (not in manifest).
   </Accordion>
   <Accordion title="2026-08-09 — Engine:Cartographer">
     - No new cross-module connections; the pricelist read uses the native partner `property_product_pricelist` field and is not a custom-module dependency.

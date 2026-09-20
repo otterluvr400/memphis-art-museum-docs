@@ -25,6 +25,7 @@
       {
         "group": "Modules",
         "pages": [
+          "modules/accounting_additions",
           "modules/bugfix_event_attendee_prefill",
           "modules/category_name_enforcement",
           "modules/custom_product_tags",
@@ -34,9 +35,11 @@
           "modules/folder_snippet_defaults",
           "modules/header_replacer",
           "modules/mailchimp_x_odoo_txsms",
+          "modules/mam_accounting_export",
           "modules/mam_integration_hub",
           "modules/mam_membership_cards",
           "modules/mam_membership_loyalty",
+          "modules/mam_pos_membership_enroll",
           "modules/mam_setup",
           "modules/mobile_pos_relayout",
           "modules/pos_event_visibility",
@@ -44,6 +47,7 @@
           "modules/pos_qol_overrides",
           "modules/pos_stripe_tap",
           "modules/web_foldering_architecture",
+          "modules/website_cleanup",
           "modules/website_event_calendar_slots",
           "modules/website_event_photo_cover",
           "modules/website_manipulator"

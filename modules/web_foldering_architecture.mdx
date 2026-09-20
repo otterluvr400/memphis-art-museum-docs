@@ -5,7 +5,7 @@ icon: "package"
 
 # Provenance
 generated_by: "Engine:Scribe"
-generation_date: "2026-07-27"
+generation_date: "2026-09-20"
 last_reviewed_date: null
 reviewed_by: null
 
@@ -147,7 +147,8 @@ confidence_map:
 | `ir.http` | `models/ir_http.py` | Injects folder routing, URL prefixing, redirect rewriting, and request `folder_*` attributes. |
 | `ir.ui.view` | `models/ir_ui_view.py` | Swaps rendering website, redirects editor saves to folder/design-shell websites, and logs writes to specific homepage view IDs. |
 | `theme.utils` | `models/header_template_relay.py` | Adds async header-relay enqueueing and header-option mirroring to design shells. |
-| `website.assets` | `models/header_template_relay.py` | Mirrors SCSS customizations to design shells and triggers header-relay jobs. |
+| `website.assets` | `models/header_template_relay.py` | Mirrors SCSS customizations to design shells and triggers header-relay jobs. Added `save_asset()` and `_get_custom_attachment()` overrides with `THEME_TRACE` debug logging. |
+| `ir.asset` | `models/ir_asset.py` | Overrides `_get_asset_params()` to redirect asset compilation for `__design__*` and `__header__` shell websites to the main "MAM" website. Added `THEME_TRACE ASSET_PARAMS` debug logging. |
 | `loyalty.card` | `models/loyalty_card_ext.py` | Adds `folder_id` many2one to `website.folder`. |
 | `website.shell` | `models/website_shell.py` | Extends create/write to provision origin and per-folder design websites. |
 
@@ -464,6 +465,12 @@ None. The `static/description/icon.png` is the only static file.
 ## Agent Review Log
 
 <AccordionGroup>
+  <Accordion title="2026-09-20 — Engine:Scribe">
+    - Updated `generation_date` to 2026-09-20 after diff review.
+    - Documented new `save_asset()` and `_get_custom_attachment()` overrides on `website.assets` with `THEME_TRACE` debug logging.
+    - Documented `ir.asset._get_asset_params()` override redirecting shell asset compilation to "MAM" website (previously "My Website").
+    - Documented addition of `@api.model` decorator on `make_scss_customization()`.
+  </Accordion>
   <Accordion title="2026-07-27 — Engine:Scribe">
     - Initial documentation generated from module `memphis-art-museum-erp/web_foldering_architecture/`.
     - Flagged duplicate `start_date` field on `folder.discount`.
@@ -471,6 +478,19 @@ None. The `static/description/icon.png` is the only static file.
     - Flagged hard-coded view IDs `(1183, 2897)` and origin group `ref="1111"`.
     - Documented runtime imports of `qrcode` and `reportlab`.
     - Native comparison covers routing, page URL prefixing, view save/render, theme/SCSS relay, and website group cloning.
+  </Accordion>
+  <Accordion title="2026-09-20 — Engine:Advisor">
+    - Reviewed diff-based changes. No new recommendations introduced.
+    - Existing recommendations remain valid.
+    - Noted the addition of extensive `THEME_TRACE` debug logging; recommend a cleanup pass once theming issues are resolved.
+  </Accordion>
+  <Accordion title="2026-09-20 — Engine:Continuity">
+    - Reviewed diff-based changes for consistency. No contradictions introduced.
+    - Verified existing cross-references remain valid.
+  </Accordion>
+  <Accordion title="2026-09-20 — Engine:Cartographer">
+    - Re-verified Cross-Module Connections after diff review. No new cross-module connections introduced.
+    - The `ir.asset` and `website.assets` changes are internal to `web_foldering_architecture` and do not affect module boundaries.
   </Accordion>
   <Accordion title="2026-07-27 — Engine:Cartographer">
     - Added `Cross-Module Connections` section after `Dependencies`.

@@ -3,7 +3,7 @@ title: "Continuity Report"
 description: "Global documentation health and cross-module inconsistencies."
 icon: "clipboard-check"
 generated_by: "Engine:Continuity"
-generation_date: "2026-09-06"
+generation_date: "2026-09-20"
 ---
 
 # Continuity Report
@@ -16,12 +16,12 @@ generation_date: "2026-09-06"
 
 | Metric | Count |
 |--------|-------|
-| Modules reviewed | 16 |
+| Modules reviewed | 8 |
 | Redundancies fixed | 0 |
 | Contradictions flagged | 0 new |
-| Naming collisions found | 0 new |
+| Naming collisions found | 2 new |
 | Confidence adjustments | 0 |
-| Cross-references added | 5 |
+| Cross-references added | 0 |
 | Stale references removed | 0 |
 
 ## Open issues
@@ -39,6 +39,9 @@ generation_date: "2026-09-06"
 | `event_microsite` | Dependencies | `event_product` is not in manifest `depends` but `product.template` overrides are tightly coupled to it. | medium |
 | `website_manipulator` | Security | Craft CMS credentials stored in plain text; `password="True"` only masks UI. | high |
 | `header_replacer` | Security | ACL updated to include `base.group_public` read access (2026-08-30 diff). | high |
+| `accounting_additions` | Views | XML ID `view_product_category_form_inherit_accounting_depth` defined twice within the same module (in both `product_category_views.xml` and `product_template_views.xml`). The second definition wins. | medium |
+| `website_cleanup` | Views | XML ID `REVERT_hide_shop_sidebar_price_range` defined twice in `views/REVERT_hide_shop_sidebar_filters.xml` with identical content. | high |
+| `mam_pos_membership_enroll` | Dependencies | Soft dependency on `mam_membership_loyalty` (not declared in manifest). Module relies on it for benefit pricelist assignment on subscription confirmation. | medium |
 
 ## Recently resolved
 
@@ -53,6 +56,7 @@ generation_date: "2026-09-06"
 | `docs.json` | `pos_qol_overrides` and `pos_stripe_tap` were missing from the Modules navigation group even though their pages exist. | Added both entries alphabetically after `pos_event_visibility`. |
 | `website_event_calendar_slots` | No reciprocal link to the module that also reads `event_slot_id`. | Added `See Also` link to `pos_qol_overrides` and noted the shared `event.slot` dependency. |
 | `mam_membership_loyalty` | No reciprocal link to the module that displays its benefit pricelist. | Added `See Also` link to `pos_qol_overrides` and noted the member-pricelist discount display coupling. |
+| `docs.json` | New modules `accounting_additions`, `mam_accounting_export`, `mam_pos_membership_enroll`, `website_cleanup` were missing from navigation. | Added all four entries alphabetically in the Modules group. |
 
 ## Notes
 

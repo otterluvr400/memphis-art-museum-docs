@@ -5,7 +5,7 @@ icon: "package"
 
 # Provenance
 generated_by: "Engine:Scribe"
-generation_date: "2026-09-06"
+generation_date: "2026-09-20"
 last_reviewed_date: "2026-08-05"
 reviewed_by: "Engine:Continuity"
 
@@ -69,6 +69,7 @@ confidence_map:
   <Accordion title="Direct manifest dependencies">
     - `point_of_sale` — Required for `pos.payment.method`, the `ProductScreen` component, and the `point_of_sale._assets_pos` bundle.
     - `sale_subscription` — Required for subscription `sale.order` creation (`plan_id`, `is_subscription`, `recurring_invoice`, `_do_payment`).
+    - `payment_stripe` — Required for Stripe payment provider integration and `payment.transaction` handling.
   </Accordion>
   <Accordion title="Soft / implied dependencies">
     - `stripe` Python package — Declared in `external_dependencies.python`. Required by the backend Stripe SDK calls.
@@ -133,6 +134,7 @@ confidence_map:
 | `product.template` | Inherited | `models/product_template.py` | Automatically sets `recurring_invoice = True` for products in membership category (ID `8`). |
 | `res.partner` | Inherited | `models/res_partner.py` | Adds `x_pos_portal_password` and `action_reveal_portal_password()`. |
 | `sale.order` | Inherited | `models/sale_order.py` | Adds `x_pos_portal_password`, `action_reveal_portal_password()`, and Blackbaud renewal sync hook in `_do_payment()`. |
+| `payment.transaction` | Inherited | `models/payment_transaction.py` | Overrides `_extract_token_values()` to adapt modern Stripe PaymentIntents (with `latest_charge` instead of `charges`) for upstream token extraction. |
 | `pos.stripe.tap.credential.mixin` | Abstract | `models/credential_view_mixin.py` | Shared audited credential-reveal helper. |
 
 ### Inherited methods
@@ -186,6 +188,14 @@ Creates a portal `res.users` for the partner if one does not already exist, gene
 **File:** `models/product_template.py`
 
 Automatically enables `recurring_invoice` when a product's category (or changed category) is membership category ID `8`. This couples product catalog data to the module's expected membership category.
+
+#### `payment.transaction._extract_token_values(payment_data)`
+
+**File:** `models/payment_transaction.py`
+
+Adapts modern Stripe PaymentIntents for upstream token extraction. When the provider is Stripe, the operation is `online_direct`, and the payment data contains a `payment_method`, the method checks for `latest_charge` (modern API) vs `charges` (legacy API). If `latest_charge` is a string, it fetches the charge via `_send_api_request`. It then reconstructs a compatible `payment_data` dict with `charges.data = [charge]` and delegates to `super()._extract_token_values()`.
+
+Raises `ValidationError` if the charge cannot be retrieved, preventing silent tokenization failures.
 
 #### `sale.order.action_confirm()` / `_enqueue_blackbaud_website_memberships()`
 
@@ -478,6 +488,11 @@ The route accepts no required parameters. It returns a JSON object with the Stri
 ## Agent Review Log
 
 <AccordionGroup>
+  <Accordion title="2026-09-20 — Engine:Scribe">
+    - Updated `generation_date` to 2026-09-20 after diff review.
+    - Documented new `payment.transaction` model override in `models/payment_transaction.py`.
+    - Updated manifest dependencies to include `payment_stripe`.
+  </Accordion>
   <Accordion title="2026-09-06 — Engine:Scribe">
     - Added documentation for the new `/pos_stripe_tap/keepalive_setup_intent` controller endpoint.
     - Added documentation for the new `sale.order.action_confirm()` / `_enqueue_blackbaud_website_memberships()` hook that mirrors the POS Blackbaud sync for website sales.
@@ -490,6 +505,19 @@ The route accepts no required parameters. It returns a JSON object with the Stri
     - Documented the OWL patch on `ProductScreen` and the `AndroidPos` JS bridge dependency.
     - Flagged the shared `stripe.secret_key` system parameter and the `sudo()` read as security notes.
     - No views, reports, security records, or static assets beyond the single JS patch were found.
+  </Accordion>
+  <Accordion title="2026-09-20 — Engine:Advisor">
+    - Reviewed diff-based changes. No new recommendations introduced.
+    - Existing recommendations remain valid.
+    - Noted the addition of `payment_stripe` as a declared dependency is a positive cleanup.
+  </Accordion>
+  <Accordion title="2026-09-20 — Engine:Continuity">
+    - Reviewed diff-based changes for consistency. No contradictions introduced.
+    - Verified existing cross-references remain valid.
+  </Accordion>
+  <Accordion title="2026-09-20 — Engine:Cartographer">
+    - Re-verified Cross-Module Connections after diff review. No new cross-module connections introduced.
+    - The new `payment.transaction` override interacts with `payment_stripe` (now a declared dependency) but does not create new custom-module couplings.
   </Accordion>
   <Accordion title="2026-08-05 — Engine:Cartographer">
     - Added **Cross-Module Connections** section.
